@@ -94,7 +94,8 @@ class MediaPlayerPlayer(
     }
 
     override fun isLiveStream(): Boolean {
-        val duration = getDuration()
-        return duration == null || duration == 0
+        /*val duration = getDuration()
+        return duration == null || duration == 0*/
+        return false
     }
 }

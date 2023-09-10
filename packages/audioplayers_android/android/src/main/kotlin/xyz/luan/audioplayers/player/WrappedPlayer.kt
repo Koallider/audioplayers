@@ -3,11 +3,12 @@ package xyz.luan.audioplayers.player
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
-import kotlin.math.min
+import android.util.Log
 import xyz.luan.audioplayers.*
 import xyz.luan.audioplayers.PlayerMode.LOW_LATENCY
 import xyz.luan.audioplayers.PlayerMode.MEDIA_PLAYER
 import xyz.luan.audioplayers.source.Source
+import kotlin.math.min
 
 // For some reason this cannot be accessed from MediaPlayer.MEDIA_ERROR_SYSTEM
 private const val MEDIA_ERROR_SYSTEM = -2147483648
@@ -218,7 +219,12 @@ class WrappedPlayer internal constructor(
                     player?.prepare()
                 } else {
                     // MediaPlayer does not allow to call player.seekTo after calling player.stop
-                    seek(0)
+                    try{
+                        seek(0)
+                    }catch (e: IllegalStateException){
+                        Log.w("Audio Player","Tried to seek and player is broken. Releasing")
+                        release()
+                    }
                 }
             }
         } else {
