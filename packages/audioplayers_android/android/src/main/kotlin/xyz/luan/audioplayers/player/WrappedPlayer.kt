@@ -213,11 +213,11 @@ class WrappedPlayer internal constructor(
         if (releaseMode != ReleaseMode.RELEASE) {
             pause()
             if (prepared) {
-                if (player?.isLiveStream() == true) {
+                /*if (player?.isLiveStream() == true) {
                     player?.stop()
                     prepared = false
                     player?.prepare()
-                } else {
+                } else {*/
                     // MediaPlayer does not allow to call player.seekTo after calling player.stop
                     try{
                         seek(0)
@@ -225,7 +225,7 @@ class WrappedPlayer internal constructor(
                         Log.w("Audio Player","Tried to seek and player is broken. Releasing")
                         release()
                     }
-                }
+                //}
             }
         } else {
             release()
@@ -259,7 +259,7 @@ class WrappedPlayer internal constructor(
     // seek operations cannot be called until after
     // the player is ready.
     fun seek(position: Int) {
-        shouldSeekTo = if (prepared && player?.isLiveStream() != true) {
+        shouldSeekTo = if (prepared) {
             player?.seekTo(position)
             -1
         } else {
@@ -277,7 +277,7 @@ class WrappedPlayer internal constructor(
             player?.start()
             ref.handleIsPlaying()
         }
-        if (shouldSeekTo >= 0 && player?.isLiveStream() != true) {
+        if (shouldSeekTo >= 0) {
             player?.seekTo(shouldSeekTo)
         }
     }
