@@ -46,7 +46,7 @@ class FocusManager(
 
         val audioFocusRequest = AudioFocusRequest.Builder(audioFocus)
             .setAudioAttributes(context.buildAttributes())
-            .setOnAudioFocusChangeListener { handleFocusResult(it, andThen) }
+           // .setOnAudioFocusChangeListener { handleFocusResult(it, andThen) }
             .build()
         this.audioFocusRequest = audioFocusRequest
 

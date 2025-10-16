@@ -193,6 +193,7 @@ class WrappedPlayer internal constructor(
     }
 
     private fun actuallyPlay() {
+
         if (!playing && !released) {
             val currentPlayer = player
             playing = true
