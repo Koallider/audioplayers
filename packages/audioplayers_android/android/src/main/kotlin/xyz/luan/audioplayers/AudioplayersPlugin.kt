@@ -271,7 +271,7 @@ class AudioplayersPlugin : FlutterPlugin, IUpdateCallback {
     }
 
     override fun startUpdates() {
-        updateRunnable?.let { handler.post(it) }
+        //updateRunnable?.let { handler.post(it) }
     }
 
     override fun stopUpdates() {
