@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'dart:io' as io;
 
 /// This class represents a cache for Local Assets to be played.
 ///
@@ -83,9 +84,13 @@ class AudioCache {
       await http.get(uri);
       return uri;
     }
-
+    final ByteData byteData;
     // read local asset from rootBundle
-    final byteData = await loadAsset('$prefix$fileName');
+    if(prefix == 'assets/' || fileName.startsWith('assets/')) {
+      byteData = await loadAsset('$prefix$fileName');
+    }else{
+      byteData = await io.File('$prefix$fileName').readAsBytes().then((value) => ByteData.view(value.buffer));
+    }
 
     // create a temporary file on the device to be read by the native side
     final file = fileSystem.file('${await getTempDir()}/$fileName');
