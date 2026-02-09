@@ -61,9 +61,11 @@ class AudioPool {
       minPlayers: minPlayers,
     );
 
-    final players = await Future.wait(
-      List.generate(minPlayers, (_) => instance._createNewAudioPlayer()),
-    );
+    final players = <AudioPlayer>[];
+
+    for (var i = 0; i < minPlayers; i++) {
+      players.add(await instance._createNewAudioPlayer());
+    }
 
     return instance..availablePlayers.addAll(players);
   }
@@ -118,8 +120,11 @@ class AudioPool {
   }
 
   Future<AudioPlayer> _createNewAudioPlayer() async {
+    print("AudioPool: Creating new AudioPlayer for source $source");
     final player = AudioPlayer()..audioCache = audioCache;
+    print("AudioPool: setting source on player ${player.playerId}");
     await player.setSource(source);
+    print("AudioPool: set release mode on player ${player.playerId}");
     await player.setReleaseMode(ReleaseMode.stop);
     return player;
   }

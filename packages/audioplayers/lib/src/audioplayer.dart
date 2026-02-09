@@ -321,7 +321,9 @@ class AudioPlayer {
   /// this method.
   Future<void> setSourceDeviceFile(String path) async {
     _source = DeviceFileSource(path);
+    print("AudioPool: setSourceDeviceFile $path");
     await creatingCompleter.future;
+    print("AudioPool: setSourceDeviceFile 2");
     await _completePrepared(
       () => _platform.setSourceUrl(playerId, path, isLocal: true),
     );

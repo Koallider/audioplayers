@@ -233,8 +233,33 @@ class WrappedMediaPlayer {
             keyValueObservation?.invalidate()
             keyValueObservation = newKeyValueObservation
         } else {
+            // URL is the same, check current status
             if playbackStatus == .readyToPlay {
                 completer?()
+            } else if playbackStatus == .failed {
+                completerError?()
+            } else {
+                // Status is .unknown or other - set up observer to wait for status change
+                guard let currentItem = player?.currentItem else {
+                    completerError?()
+                    return
+                }
+                
+                let newKeyValueObservation = currentItem.observe(\AVPlayerItem.status) { (playerItem, change) in
+                    let status = playerItem.status
+                    self.eventHandler.onLog(message: "player status (same URL): \(status) change: \(change)")
+                    
+                    if status == .readyToPlay {
+                        self.updateDuration()
+                        completer?()
+                    } else if status == .failed {
+                        self.releaseSync()
+                        completerError?()
+                    }
+                }
+                
+                keyValueObservation?.invalidate()
+                keyValueObservation = newKeyValueObservation
             }
         }
     }
